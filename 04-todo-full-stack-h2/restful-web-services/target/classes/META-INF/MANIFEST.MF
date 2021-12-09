@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: mails
+Build-Jdk: 15.0.2
+Implementation-Title: rest-api-full-stack
+Implementation-Version: 0.0.1-SNAPSHOT
+Implementation-Vendor-Id: com.in28minutes.rest.webservices
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/04-rest-api-full-stack
+Created-By: Maven Integration for Eclipse
+
