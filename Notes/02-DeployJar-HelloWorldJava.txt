@@ -1,0 +1,89 @@
+- Code is in D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\01-hello-world-rest-api
+- We will use Azure CLI( Command Line Interface)
+- For this :
+	(1) Include maven plugin 'azure-webapp-maven-plugin' in build section within pom
+		- We now need to auto configure the plugin which can be done via two options:
+		- Option 1 : Run plugin using maven in eclipse :
+			- Right click project-> Run as -> Maven Build -> Goals=azure-webapp:config -> Run
+			- The above step will download a no. of dependencies.
+			- After the successful build copy teh below info from teh console which can be found just abve the @build Success@ message:
+				Please confirm webapp properties
+				Subscription Id : cab51fa7-6e0c-40e0-a5cf-83b1def2d3ca
+				AppName : 01-hello-world-rest-api-1637130875483
+				ResourceGroup : 01-hello-world-rest-api-1637130875483-rg
+				Region : centralus
+				PricingTier : P1v2
+				OS : Linux
+				Java : Java 8
+				Web server stack: Java SE
+				Deploy to slot : false
+				[INFO] Use Y for confirm
+				[INFO] Saving configuration to pom.
+				[INFO] ------------------------------------------------------------------------
+				[INFO] BUILD SUCCESS
+				[INFO] ------------------------------------------------------------------------
+
+			- The above details will also be automatically added to the 'azure-webapp-maven-plugin'  plugin in the pom file
+				- Change <region>centralus</region> to <region>westeurope</region> in pom
+			- Also added automatically wil be the deployment details which state that a *.jar file needs to be deployed from ${project.basedir}/target
+			
+
+			- Option 2 : Using command prompt:
+				 - Remove the configuration steps which were auto geenrated using eclipse in Option 1 above 
+				- Open command prompt:
+					- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\01-hello-world-rest-api
+					- cmd:mvn azure-webapp:config
+						- the above command will present us with options to choose( note: thsi is different from Option 1 where Eclipse made the decision for us):
+						-Define value of OS: select Linux 
+						-JavaVersion: select Java 11
+						- Pricing tier : B1
+						- Confirm other values
+					- These details will eb added to teh pom file under the plugin 'azure-webapp-maven-plugin'
+						-In POM change teh configration details such as:
+							- <region>westeurope</region>
+							-<resourceGroup>hello-world-rest-api-rg</resourceGroup>
+							-<appName>hello-world-rest-api-mailsonymathew</appName>
+								- Note: appName should be unique
+							- configure app settings such as port etc. as follows:
+								         <region>westeurope</region>
+          								<appSettings>
+          									<property>
+          										<name>JAVA_OPTS</name>
+          										<value>-Dserver.port=80</value>
+          									</property>
+          								</appSettings>	
+          								<runtime>
+ - Install Azure CLI:
+		- We need Azure CLI to login into Azure	
+		- Ref: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli
+		- cmd:
+			- az login
+
+- Deploy azure webapp:
+	- *** - It is important tat you instal lAzure CLI if teh below command is to work
+	- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\01-hello-world-rest-api
+	- Build jar:
+		- cmd: mvn clean install 
+		       OR	
+	 	       mvn clean install -DskipTests   -> skip tests
+		- hello-world-rest-api.jar will eb geenratged in target folder	
+	- Deploy:
+		- cmd: mvn azure-webapp:deploy
+		- Will automatically use Azxure CLI which will ask for credentials
+		- The default url genrated will show a whitelabel erro page. Append /hello-world or /hello-world-bean		
+		-If we run 'mvn azure-webapp:deploy' withpout crerating the jar first, it Will lautomaticaally deploy web app into Azure 		using teh Azure CLI crfedentials
+		- Since we did not build a jar teh default sample ms application will eb deployed
+		- to deploy our service first build a jar 
+
+- View logs in console:
+	- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\01-hello-world-rest-ap
+	- cmd:
+		- az webapp log tail --name app-name --resource-group rg-name
+		- E.g az webapp log tail --name hello-world-rest-api-mailsonymathew
+			
+	
+
+
+
+	
+			

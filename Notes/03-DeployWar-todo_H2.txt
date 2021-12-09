@@ -1,0 +1,92 @@
+- Code is in D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\02-todo-web-application-h2
+- Packaging used is war
+	- When packaging is war we would neded to exclude Tomcat dependeny
+	- The dependency 'spring-boot-starter-web' automatically include Tomcat in your deployable unit
+	- In the Tomcat dependeny we need to provide a scope of 'provided' to exclude Tomcat dependency
+	- Also in the main Spring Boot application(SpringBootFirstWebApplication), we need to extend the class as follows and override the configure method:
+		- public class SpringBootFirstWebApplication extends SpringBootServletInitializer 
+		- 	@Override
+			protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+				return application.sources(SpringBootFirstWebApplication.class);
+			}
+
+
+ - Create war :
+	- Option 1: 
+		- Eclipes-> Project -> Right Click -> Run as -> Maven Build-> Goals= clean package
+		- war file will be generated in target folder
+			- todo-web-application-h2.war
+	- Option 2:
+		- cd D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\02-todo-web-application-h2
+		- cmd: mvn clean package  
+		  OR
+		      mvn clean install 
+		- use 'mvn clean install' as it will compile and package, but it will also put the package in your local repository. So that other projects can refer to it and grab it from your local repository.
+
+- Configure:
+	- cd D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\02-todo-web-application-h2
+	-	
+
+	- For this :
+	(1) Include maven plugin 'azure-webapp-maven-plugin' in build section within pom
+		- We now need to auto configure the plugin which can be done via two options:
+		- Option 1 : Run plugin using maven in eclipse :
+			- Right click porject-> Run as -> Maven Build -> Goals=azure-webapp:config -> Run
+			- The above step will download a no. of dependencies.
+			- After the successful build copy teh below info from teh console which can be found just abve the @build Success@ message:
+
+			- The above details will also be automatically added to the 'azure-webapp-maven-plugin'  plugin in the pom file
+				- Change <region>centralus</region> to <region>westeurope</region> in pom
+			- Also added automatically wil be the deployment details which state that a *.War file needs to be deployed from ${project.basedir}/target
+			
+
+			- Option 2 : Using command prompt:
+				 - Remove the configuration steps which were auto geenrated using eclipse in Option 1 above 
+				- Open command prompt:
+					- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\02-todo-web-application-h2
+					- cmd:mvn azure-webapp:config
+						- the above command will present us with options to choose( note: thsi is different from Option 1 where Eclipse made the decision for us):
+						-Define value of OS: select Linux
+						-JavaVersion: select Java 11
+						- Webcontainer: Tomcat 9
+						- Pricing tier : B1
+						- Confirm other values
+					- These details will eb added to teh pom file under the plugin 'azure-webapp-maven-plugin'
+						-In POM change teh configration details such as:
+							- <region>westeurope</region>
+							-<resourceGroup>todo-rest-api-rg</resourceGroup>
+							-<appName>todo-rest-api-mailsonymathew</appName>
+								- Note: appName should be unique
+							- No need to configure app settings such as port as we are usign a war file not 							jar. The port will be automatically taken from the application
+ - Install Azure CLI:
+		- We need Azure CLI to login into Azure	
+		- Ref: https://docs.microsoft.com/en-us/cli/azure/install-azure-cli-windows?tabs=azure-cli
+		- cmd:
+			- az login
+
+- Deploy azure webapp:
+	- *** - It is important tat you instal lAzure CLI if teh below command is to work
+	- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\02-todo-web-application-h2
+	- Build war:
+		- cmd: mvn clean install 
+		- *	.jar will eb geenratged in target folder	
+	- Deploy:
+		- cmd: mvn azure-webapp:deploy
+		- Will automatically use Azxure CLI which will ask for credentials
+		- The default url genrated will show a whitelabel erro page. Append /hello-world or /hello-world-bean		
+		-If we run 'mvn azure-webapp:deploy' withpout crerating the jar first, it Will lautomaticaally deploy web app into Azure 		using teh Azure CLI crfedentials
+		- Since we did not build a jar teh default sample ms application will eb deployed
+		- to deploy our service first build a jar 
+
+- View logs in console:
+	- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\02-todo-web-application-h2
+	- cmd:
+		- az webapp log tail --name app-name --resource-group rg-name
+		- E.g az webapp log tail --name todo-rest-api-mailsonymathew  --resource-group todo-rest-api-rg
+			
+	
+
+
+
+	
+			

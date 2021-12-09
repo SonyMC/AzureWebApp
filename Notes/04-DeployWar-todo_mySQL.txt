@@ -1,0 +1,311 @@
+** Install Azure CLI before doing the following
+(1) Read the 'readme.md' file for detais on hot to configure projectfro mySQL
+(2) Add teh following mysql dependency after the h2 dependency:
+	<dependency>
+    		<groupId>com.h2database</groupId>
+    		<artifactId>h2</artifactId>
+    		<scope>test</scope>
+	</dependency>
+	<dependency>
+    		<groupId>mysql</groupId>
+    		<artifactId>mysql-connector-java</artifactId>
+	</dependency>
+
+
+(3)src/main/resources/application.properites: Configure  as follows:
+#spring.h2.console.enabled=true
+#spring.h2.console.settings.web-allow-others=true
+
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.jpa.hibernate.ddl-auto=update
+spring.datasource.url=jdbc:mysql://${RDS_HOSTNAME:localhost}:${RDS_PORT:3306}/${RDS_DB_NAME:todos}?serverTimezone=UTC
+spring.datasource.username=${RDS_USERNAME:todos-user}
+spring.datasource.password=${RDS_PASSWORD:dummytodos}
+#spring.datasource.url=jdbc:mysql://localhost:3306/todos
+#spring.datasource.username=todos-user
+#spring.datasource.password=dummytodos
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQL57Dialect
+
+
+(4)src/test/resources/application.properites: Configure as follows for unit test where we specify to us eteh embdded H2 DB rateh rthan the mySQL DB:
+src/test/resources/application.properties
+spring.jpa.hibernate.ddl-auto=create-drop
+spring.datasource.driver-class-name=org.h2.Driver
+spring.datasource.url=jdbc:h2:mem:testdb;DB_CLOSE_DELAY=-1
+spring.datasource.username=sa
+spring.datasource.password=sa
+
+
+(5) Run mySQL as Docker Container on Local on port 3306:
+	- search for docker mysql  : https://hub.docker.com/_/mysql
+	
+- cmd:docker run --detach --publish 3306:3306 --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql mysql:5.7
+		
+- Note: We are specifying teh root pwd, user, and user pwd as enivornment variables. You can us '-e'instead of '--env'
+		- We are also specifyign DB name as todos
+
+	- Verify docker citnaer is running:
+		cmd: docker ps 
+			OR
+		    docker container list
+			- Will show container runnign on port 3306/tcp
+
+
+			
+
+
+(6) Start application in eclpse :
+		- browser: localhost:8080/login
+		- Username= in28minutes
+		  pwd:dummy
+
+              - insert rows
+
+		OR
+	- - use mysql shell to insert data :
+		- insert into todo (id,description,is_done,target_date,user) values(27,'Legendary', 0, '2019-06-26 18:30:00.000000', 'mailsonymathew');	
+				
+(7) Connect to MySQL servover using MySQl shell:
+	- Open termial:
+	- 		- cmd:mysqlsh
+	-Now type the following in the subsequent screens:
+		- cmd:\connect:
+			\connect [--mx|--mysqlx|--mc|--mysql] <URI>
+		- cmd: \connect todos-user@localhost:3306
+			- pwd:dummytodos
+			- Save pwd: No
+			  	- Fetching schema names for autocompletion... Press ^C to stop.
+				Your MySQL connection id is 9
+				Server version: 8.0.27 MySQL Community Server - GPL
+				No default schema selected; type \use <schema> to set one.
+				 MySQL  localhost:3306 ssl  JS >
+			- use sql:
+				- cmd: \sql
+MySQL  JS > \connect todos-user@localhost:3306
+Creating a session to 'todos-user@localhost:3306'
+Please provide the password for 'todos-user@localhost:3306': 
+Save password for 'todos-user@localhost:3306'? [Y]es/[N]o/Ne[v]er (default No): v
+Fetching schema names for autocompletion... Press ^C to stop.
+Your MySQL connection id is 37
+Server version: 5.7.26 MySQL Community Server (GPL)
+No default schema selected; type \use <schema> to set one.
+
+ MySQL  localhost:3306 ssl  JS > \sql
+Switching to SQL mode... Commands end with ;
+
+ MySQL  localhost:3306 ssl  SQL > use todos
+Default schema set to `todos`.
+Fetching table and column names from `todos` for auto-completion... Press ^C to stop.
+
+ MySQL  localhost:3306 ssl  todos  SQL > select * from todo ;
+
+
+(8) Create MySQL DB in Azure:
+	-Azure -> Search -> MySQL -> Azure Database for MySQL servers
+	- Add:	
+		- Resounrce Group -> Create new-> Singel Server->mailsonymathew-database
+		- Server Name= todo-web-application-mailsonymathew
+		- Data Source = none
+		- Location= West Europe
+		- Version: 5.7
+			- Compute-Storage=> configure server-> Basic-> 2 cores, 50 GB, Auto Groewth=no, Backup Redundany Option=Locally Redundant
+		- Admin username= todouser	
+		- Password=Pa55w0rd@
+		
+
+
+(9) Deploy app to Azure Web App:
+					- cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\03-todo-web-application-mysql
+					-Include maven plugin 'azure-webapp-maven-plugin' in build section within pom
+					-Create war: mvn clean install 
+					
+					-Configure: cmd:mvn azure-webapp:config
+						- the above command will present us with options to choose( note: thsi is different from Option 1 where Eclipse made the decision for us):
+						-Define value of OS: select Windows
+						-JavaVersion: select Java 11
+						- Webcontainer: Tomcat 9
+						- Pricing tier : B1
+						- Confirm other values
+					- These details will eb added to teh pom file under the plugin 'azure-webapp-maven-plugin'
+						-In POM change teh configration details such as:
+							- <region>westeurope</region>
+							-<resourceGroup>todo-web-app-mysql-rg</resourceGroup>
+							-<appName>todo-web-app-mysql-mailsonymathew</appName>
+								- Note: appName should be unique
+		
+		 		
+				  - Deploy:
+					- cmd: mvn azure-webapp:deploy
+						- Note: We have not configured teh app to connect to teh MySQL DB yet
+
+
+
+
+				- View logs in console:
+		
+					- cmd:
+						- az webapp log tail --name app-name --resource-group rg-name
+						- E.g az webapp log tail --name todo-web-app-mysql-mailsonymathew --resource-group todo-web-app-mysql-rg 	 
+
+
+
+
+				- Enable log stream :
+					- After app has been dployed -> search logs-> App Service logs-> File System -> Retention period = 1 day
+					- Click on Log Stream
+					- cmd: az webapp log tail --name todo-web-app-mysql-mailsonymathew --resounrce-group 
+						- You will not java.net.exception -> connection refused	
+						- Enable commented out RDS_* hostname,port,DB name,username and password in application.properties. We have to configue these environment variables
+						- Configure environment variables defined in application.properties:
+							-got to our mysql db-> todo-web-application-mailsonymathew
+							- Go to UI and copy teh server name and the Server admin login name
+							- Server admin login name=
+							- Web app-> todo-web-app-mysql-mailsonymathew-> configuration-> Application Settings-> New Application Setting
+							- Add 
+								- RDS_HOSTNAME= copy server name on MYSQL server as in UI =todo-web-application-mailsonymathew.mysql.database.azure.com
+								- RDS_PORT=3306
+								- RDS_DB_NAME=todos
+								- RDS_USERNAME=Server admin usr name=todouser@todo-web-application-mailsonymathew	
+								- RDS_PASSWORD=Password=Pa55w0rd@  ( this was specified at time of creation)
+
+
+			- Restart applicaton-> 
+				- Option1 : From Azure UI
+					- Web app-> todo-web-app-mysql-mailsonymathew-> Overview -> Restart
+				- Option 2: From CLI:
+					- cmd: az webapp restart --name todo-web-app-mysql-mailsonymathew --resource-group  todo-web-app-mysql-rg			
+			- Deployment fails:
+				- Error 1:java.sqlSQLException: Client with IP address 'xx.xx.xx.xx' is not allowed to connect o MySQL server
+				- Enable acess :
+					- MySQL DB-> 	todo-web-application-mailsonymathew -> Settings-> Connection Security-> Allow access to Azure services = on
+						- you can also specify IP adresses which you like here
+				- Restart application:az webapp restart --name todo-web-app-mysql-mailsonymathew --resource-group todo-web-app-mysql-rg		
+				- Error 2: Caused by:  java.sql.SQLSyntaxException: Unknown databse 'todos'
+					- This is because todpos db is not available
+					- We will use Azure Cloud Shell to create DB 
+				
+
+
+(9)Create MySQL DB using Azure Cloud Shell;
+	-  Launch cloud shell:
+			- Web app-> todo-web-app-mysql-mailsonymathew-> 
+			- Click on Cloud Shell Icon on top next to the main search bar
+				- Select BASH:
+					- Create Storage
+					- cmd: mysql
+						- Error : Cannot cannot to MYSQL server
+	
+					- cmd : mysql --version
+						- will show version 
+					- cmd:	mysql --host <RDS_HOSTNAME> --user <RDS_USERNAME> -p
+						mysql --host todo-web-application-mailsonymathew.mysql.database.azure.com --user todouser@todo-web-application-mailsonymathew -p 
+						- Enter pwd: Password=Pa55w0rd@  ( hsiwas specified at time of creation)
+						- SSL error: 
+							- My sql db-> todo-web-application-mailsonymathew-> Connection Security -> Enforce SSL Connection= Disabled
+						- login again using cloud shell
+						-  mysql>show databases;
+						  mysql>create database todos;
+			- Now restart webapp:
+				- Azure cli: az webapp restart --name todo-web-app-mysql-mailsonymathew --resource-group todo-web-app-mysql-rg		
+			
+					- View logs in console:
+						- cmd:
+							- az webapp log tail --name app-name --resource-group rg-name	
+			- go back to cloudshell:
+				- mysql>use todos;
+				- mysql>select * from todo;
+					- Empty set 
+
+			-Go to applicaiton and insert data:
+				-Web app-> todo-web-app-mysql-mailsonymathew->url
+					- username=in28minutes
+					-pwd:dummy
+				- sign in -> ToDos tab-> Add todo records;  					
+
+			- go back to cloudshell:
+				- mysql>select * from todo;
+
+(10)Create DB using Azure Cloud Shell:
+	-Go to MySQL server:
+		- MySQL DB-> 	todo-web-application-mailsonymathew ->Connection security-> Deelte existing Ruele for CLiantIPAdress:
+			- open cmd prompt in local:
+				- cmd:mysqlsh hostname --user <RDS_USERNAME>
+					- E.g mysqlsh <RDS_HOSTNAME> --user <RDS_USERNAME>
+					-mysqlsh todo-web-application-mailsonymathew.mysql.database.azure.com --user todouser@todo-web-application-mailsonymathew 	
+					- Note: We cannot use 'mysqlsh <username@RDS_HOSTNAME> because username <RDS_USERNAME> itself contains an @ and hence command will fail
+				- Please provide password: Pa55w0rd@  ( this was specified at time of creation)
+
+				- We will get connection error fro IP adress  because we have nto specified rule for IP address in mYSQL server;copy IP adress
+					-- MySQL DB-> 	todo-web-application-mailsonymathew ->Connection security-> 
+						- Add client IP -> Save 
+						- Wait for 30 seconds before you try to attempt connecting again using local cmd prompt
+				-open cmd prompt in local:		
+					-cmd:mysqlsh hostname --user <RDS_USERNAME>
+					- E.g mysqlsh <RDS_HOSTNAME> -user <RDS_USERNAME>
+					- Please provide password: Pa55w0rd@  ( this was specified at time of creation)
+					-cmd:\sql
+						- use to dos;
+						- select * from todo;
+
+
+(11) Create MySQL DB using Azure CLI:
+		- Open local cmd prompt
+		- Will be automatically configured to use a few connections
+		- Add extension for creation DB:
+			- cmd: az extension add --name db-up
+			- Wil get message :'The installed extension 'db-up' is in preview.'
+		- Create db:
+			-cmd:az mysql up -g <rg-name> -s <RDS_HOSTNAME>-command-line -d <dbname> -u <username> -p <pwd>
+				- E.g: az mysql up -g mailsonymathew-database -s hostname -d todos -u todouser -p Pa55w0rd@ 
+					-az mysql up -g mailsonymathew-database -s todomailsonymathew -d todos -u todouser -p Pa55w0rd@  
+				- Will take around 10 minutes 
+				- By default firewall rulers are allowed to accept connections from all Azure resounrces; also firewall rule is automatically configured fro clielt IP adress
+
+		- go to rg mailsonymathew-databse:
+			- go to new db <RDS_HOSTNAME>-command-line
+			- copy server name and server admin lgin name
+			- change environment variables:
+				- - Web app-> todo-web-app-mysql-mailsonymathew-> configuration-> Application Settings-> New Application Setting
+							- Add 
+								- RDS_HOSTNAME= copy server name on MYSQL server as in UI=todomailsonymathew.mysql.database.azure.com 
+								- RDS_PORT=3306
+								- RDS_DB_NAME=todos
+								- RDS_USERNAME=Server admin usr name=todouser@todomailsonymathew
+								- RDS_PASSWORD=Password=Pa55w0rd@  ( this was specified at time of creation)	
+
+		- Restart application to connect to DB :
+			- cmd: az webapp restart --name todo-web-app-mysql-mailsonymathew --resource-group todo-web-app-mysql-rg		
+			- -Web app-> todo-web-app-mysql-mailsonymathew->url
+					- username=in28minutes
+					-pwd:dummy
+				- sign in -> ToDos tab-> Add todo records;  
+			-local prompt:
+				- cmd:mysqlsh <RDS_HOSTNAME> --user <RDS_USERNAME> -p
+					- password:Pa55w0rd@
+				-\sql:
+					- use todos;
+					- select * from todo;	
+			
+			   
+
+
+(8) Stop & remove container
+	- cmd: docker stop container-id
+	- cmd: docker rm container-id
+
+(9)Use docker compose file in D:\OneDrive\Study\DevOps\Devops Notes\Docker\SampleDockerCompose\docker-compose_MySQL.yaml to recreate conainer
+	- start spring boot application  ***** Error being thrown - resolve
+	- rename docker-compose_MySQL.yaml to docker-com[pose.yaml before running'docker-compose up'
+	- connect to mysql shel as root:
+		- cmd: \connect root@localhost:3306
+			- pwd:dummypassword
+
+
+
+
+			
+
+	
+	
+
+

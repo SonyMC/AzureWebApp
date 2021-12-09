@@ -1,0 +1,216 @@
+1) cd D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\05-todo-rest-api-h2-containerized
+2) Dockerfile is avilable for building jar and building container
+3) Include Spotify plugin :
+		- Including thsi plugin will enable command 'mvn package' to build a docker image from the Dockerfile
+		
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			
+			<!-- Docker -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<!-- <goal>push</goal> --> 
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>mailsonymathew/${project.artifactId}</repository>
+					<tag>${project.version}</tag>
+					<skipDockerInfo>true</skipDockerInfo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+4)Create docker image:
+	- cd D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\05-todo-rest-api-h2-containerized
+	- Open Docker Desktop 
+	- cmd: mvn clean package
+			- Will build both jar & Docker image
+	- copy image name:
+		- mailsonymathew/todo-rest-api-h2:1.0.0.RELEASE
+
+5) Run Docker container;
+	- cmd: docker run -p 5000:5000 mailsonymathew/todo-rest-api-h2:1.0.0.RELEASE
+	-url:http://localhost:5000/hello-world
+	- POST request ueing TALEND API: 
+		- refer README.md file 
+		- REmove authorization header
+		- Content type = JSON
+		- POST to http://localhost:5000/jpa/users/in28minutes/todos with BODY of Request given below
+
+{
+  "username": "in28minutes",
+  "description": "Learn to Drive a Car",
+  "targetDate": "2030-11-09T10:49:23.566+0000",
+  "done": false
+}
+
+		- Response : 201
+
+6) Push image to Dock	er Hub:
+	- docker push mailsonymathew/todo-rest-api-h2:1.0.0.RELEASE
+
+7)Deploying Docker Image to Azure:
+	- Use command line for this 
+	 -Create a resource group in Azure:
+		- cmd: az group create --name container-resource-group --location westeurope
+	 -Create an app service plan using teh resounrce group we have created abve and use a premium pricing tier 'P1v2'  instead of basic pricing tier 'B1'. OS chosen Linux.
+		-cmd: az appservice plan create --name container-service-plan --resource-group container-resource-group --sku P1v2 --is-linux
+	 -Create webapp using above resounrce group and service plan and teh image from docker hub 
+		-cmd:az webapp create --resource-group container-resource-group --plan container-service-plan --name todo-rest-api-h2-container --deployment-container-image-name mailsonymathew/todo-rest-api-h2:1.0.0.RELEASE 
+
+	- If you get connection error, try again	
+
+	- Go to Azure-> Resounrce Group -> container-resounrce-group -> todo-rest-api-h2-container
+		- Azure url -> Whitelabel error 
+			- append url with GET path : Azure url/jpa/users/in28minutes/todos
+				- E.g. https://todo-rest-api-h2-container.azurewebsites.net/jpa/users/in28minutes/todos 
+			- nothinfg is returned as tehre are no todos. 
+			- POST request:
+Creating a new todo
+•POST to http://localhost:5000/jpa/users/in28minutes/todos with BODY of Request given below
+{
+  "username": "in28minutes",
+  "description": "Learn to Drive a Car",
+  "targetDate": "2030-11-09T10:49:23.566+0000",
+  "done": false
+}
+
+
+	- Explore:
+		- Search for container settings  -> Single Container
+			- Will containe all container settings 
+			- Will also contain logs
+			- Continous Deployment = Off
+				- Each time we push an updated image to docker hub, we need to manually deploy
+				- For turning on Containous deployment:
+					- Whenever w epush new image to docker hub, it wil leb automatically deployed to Azure
+					- Continous Deployment = ON
+					- https://docs.microsoft.com/en-us/azure/app-service/containers/app-service-linux-ci-cd
+					- https://docs.docker.com/docker-hub/webhooks/
+					- Webhook url-> show url-> copy url
+						- Cofigure Docker Hub to use thsi webhook url:
+							- Docker Hub-> go to your respository-> Webhooks tab -> 
+								- Webook name, url -> create
+
+
+8) Running multiple containers with MySQL on Local:
+	- We are running two containers as part of a single application 
+	- D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\06-todo-rest-api-mysql-containerized
+	- Connecting to mySQL:
+		- Add following dependencies in POM:
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+		</dependency>
+
+
+	- Docker depnedency:
+		- Add Spotify plugin:
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+
+			<!-- Docker -->
+			<plugin>
+				<groupId>com.spotify</groupId>
+				<artifactId>dockerfile-maven-plugin</artifactId>
+				<version>1.4.13</version>
+				<executions>
+					<execution>
+						<id>default</id>
+						<goals>
+							<goal>build</goal>
+							<!-- <goal>push</goal> --> 
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<repository>mailsonymathew/${project.artifactId}</repository>
+					<tag>${project.version}</tag>
+					<skipDockerInfo>true</skipDockerInfo>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+
+	- Application.properties:
+		- configure application.porperties in src/main/resources to use MySql
+		- configure application.porperties in src/test/resources to use	H2
+
+	- Dockerfile is included
+
+	- Build Docker image:
+		- Open Decoker Desktop 
+		- cmd: mvn clean package
+			- Will build jar & Docker image
+			- copy image :
+				-mailsonymathew/todo-rest-api-mysql:1.0.0.RELEASE
+	- Push to Docker Hub:
+		- docker push mailsonymathew/todo-rest-api-mysql:1.0.0.RELEASE
+	- Refer 'readme.md' to run contianer:
+
+		-Run mySQL as a container on local
+			- cmd:docker run --detach --env MYSQL_ROOT_PASSWORD=dummypassword --env MYSQL_USER=todos-user --env MYSQL_PASSWORD=dummytodos --env MYSQL_DATABASE=todos --name mysql --publish 3306:3306 mysql:5.7
+	
+	- Now the REST API container needs to talk with the MySQL container on local:
+		- For this we have to link the REST API container on runtiem with teh mySQL container:
+			- cmd: docker run --name todos-api --publish 5000:5000 --link mysql:mysql mailsonymathew/todo-rest-api-mysql:1.0.0.RELEASE	
+
+	- Test: Run http://localhost:5000/hello-world
+
+- Running mult-containers using Docker compose:
+	- D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\06-todo-rest-api-mysql-containerized
+	- Docker compose file is available in above direcotry
+	 -cd into above version:
+		= cmd: docker-compose up
+	- test urls with POST and GET
+
+- Deploying Docker Compose java Spring Boot App with MySQL to Azure:
+	- Open cmd in D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\06-todo-rest-api-mysql-containerized
+	- Use command line:
+		- Create resource group :
+			cmd: az group create --name docker-compose-resource-group --location westeurope
+		- Create an app service plan using teh resounrce group we have created abve and use a premium pricing tier 'P1v2'  instead of basic pricing tier 'B1'. OS chosen Linux.:
+			cmd: az appservice plan create --name docker-compose-service-plan --sku P1v2 --resource-group docker-compose-resource-group --is-linux 
+		- Deploy multi container using docker compose to Azure:
+			cmd:az webapp create --resource-group docker-compose-resource-group --plan docker-compose-service-plan --name todo-rest-api-mysql--docker-compose --multicontainer-config-type compose --multicontainer-config-file docker-compose.yaml
+
+	- Will take arond 10 minutes
+	- resource group ->docker-compose-resource-group -> app-serice-plan=todo-rest-api-mysql--docker-compose 
+		- url-> 
+			- Whitelable Error
+			- Append url with remaiiing path ( refer Rreadme.md')
+				- E.g.Azure url/jpa/users/in28minutes/todos
+					- Empty repsonse 
+				- Use TALEND API to POST a todo
+
+9) Deelte resounrce group from command line"
+	- cmd: az group delete --name <resource-group>
+			- E.g. az group delete --name container-resource-group
+			- Wil lask for confirmtion 
+			- Supress confirmation flag:
+				- cmd: az group delete --name <resource-group> --yes
+				E.g az group deelte --name docker-compose-resounrce-group --yes	 
+		

@@ -1,0 +1,46 @@
+1)QuickStart->  Create a Web App 
+
+	OR
+Searc for App Services-> Create Ap Service -> Create Web App
+
+2) Creation:
+	- Subscription: Azure Subscription 1
+	- Resource Group :
+		- New--> first-azure-application
+	- Name: 
+		- first-azure-app-mailsonymathew
+	- Publish:
+		- Code
+	- Runtime Stack:
+		- Java 11 -> Java SE
+	- Operating System:
+		- Linux
+	- Region:
+		- West Europe
+	- App Service Plan:
+		- Linux Plan( West Europe): 
+			- Sku & size: change size-> Dev/Test-> F1 ( 60 min/day compute free) or B1( 946.67 INR /month)
+	- Review & Create -> Create
+
+3) After crration-> go to resounrce-> select our app -> you can browse/start/stop etc.
+
+
+4) Deploymnet Center-> Will help deploy new versin of application
+
+5)Deployment Slots -> Create different dployment slots like QA, DEV etc
+		   -> Thsi is available only for higher plans
+
+6)Log Stream-> 
+	- type logs in search bar -> Logs Stream 
+	- see what all is going on in application
+	- Log settings can be configured ysing 'App Service Logs'
+
+7) Configuration-> 
+	-> Configure application settings
+
+8) Scale up / Scale out
+
+9) Kudu console- >
+	-> used for debugging and findign root cause
+	-> resource-> application->search for  advanced-> advanced tools-> go link -> kudu console
+	-> can be used to SSh		

@@ -1,0 +1,6 @@
+- Here we are first using Azure Webapps to deploy and then geernate teh pipeline from that deployment .
+- We wil leb using teh same RG
+- Select pipleine template 'Maven package Java Project Web App to Linux on Azure'
+	- Will automtiacally geenrate pipeline yaml script which will build the jar/war and deploy it based on our configuration in Azure Webapp .
+	- Form tehat point, wheenver we commit code ot teh linked GITHUB repo, teh pipeline will execute
+- REfer video for more details 

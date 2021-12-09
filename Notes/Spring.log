@@ -1,0 +1,191 @@
+2021-11-26 13:05:29.389 ERROR 20916 --- [restartedMain] o.s.b.c.l.LoggingApplicationListener     : Cannot set level '=debu' for 'org.springframework.web'
+2021-11-26 13:05:29.493  INFO 20916 --- [restartedMain] c.i.s.web.SpringBootFirstWebApplication  : Starting SpringBootFirstWebApplication on Athelas with PID 20916 (D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\03-todo-web-application-mysql\target\classes started by mails in D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\03-todo-web-application-mysql)
+2021-11-26 13:05:29.493  INFO 20916 --- [restartedMain] c.i.s.web.SpringBootFirstWebApplication  : No active profile set, falling back to default profiles: default
+2021-11-26 13:05:29.547  INFO 20916 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2021-11-26 13:05:29.548  INFO 20916 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2021-11-26 13:05:30.775  INFO 20916 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data repositories in DEFAULT mode.
+2021-11-26 13:05:30.871  INFO 20916 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 83ms. Found 1 repository interfaces.
+2021-11-26 13:05:31.465  INFO 20916 --- [restartedMain] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$a2294f10] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-11-26 13:05:31.809  INFO 20916 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 8080 (http)
+2021-11-26 13:05:31.838  INFO 20916 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2021-11-26 13:05:31.839  INFO 20916 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.22]
+2021-11-26 13:05:32.039  INFO 20916 --- [restartedMain] org.apache.jasper.servlet.TldScanner     : At least one JAR was scanned for TLDs yet contained no TLDs. Enable debug logging for this logger for a complete list of JARs that were scanned but no TLDs were found in them. Skipping unneeded JARs during scanning can improve startup time and JSP compilation time.
+2021-11-26 13:05:32.048  INFO 20916 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2021-11-26 13:05:32.048  INFO 20916 --- [restartedMain] o.s.web.context.ContextLoader            : Root WebApplicationContext: initialization completed in 2500 ms
+2021-11-26 13:05:32.581  INFO 20916 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2021-11-26 13:05:33.112  INFO 20916 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2021-11-26 13:05:33.177  INFO 20916 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [
+	name: default
+	...]
+2021-11-26 13:05:33.303  INFO 20916 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate Core {5.3.10.Final}
+2021-11-26 13:05:33.306  INFO 20916 --- [restartedMain] org.hibernate.cfg.Environment            : HHH000206: hibernate.properties not found
+2021-11-26 13:05:33.520  INFO 20916 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.0.4.Final}
+2021-11-26 13:05:33.663  INFO 20916 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2021-11-26 13:05:34.297  INFO 20916 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2021-11-26 13:05:34.338  INFO 20916 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2021-11-26 13:05:34.805  INFO 20916 --- [restartedMain] o.s.s.concurrent.ThreadPoolTaskExecutor  : Initializing ExecutorService 'applicationTaskExecutor'
+2021-11-26 13:05:34.836  WARN 20916 --- [restartedMain] aWebConfiguration$JpaWebMvcConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2021-11-26 13:05:35.166  INFO 20916 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Creating filter chain: any request, [org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@38426716, org.springframework.security.web.context.SecurityContextPersistenceFilter@450e6697, org.springframework.security.web.header.HeaderWriterFilter@19939a51, org.springframework.security.web.authentication.logout.LogoutFilter@3a09460c, org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter@db2c1f9, org.springframework.security.web.authentication.ui.DefaultLoginPageGeneratingFilter@113aa6a7, org.springframework.security.web.authentication.ui.DefaultLogoutPageGeneratingFilter@cbc8bf6, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@186939c4, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@12b8ff62, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@4784df9b, org.springframework.security.web.session.SessionManagementFilter@4a61302c, org.springframework.security.web.access.ExceptionTranslationFilter@3d2d1d1, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@2cc7357c]
+2021-11-26 13:05:35.201  INFO 20916 --- [restartedMain] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 16 endpoint(s) beneath base path '/manage'
+2021-11-26 13:05:35.270  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ====== Environment and configuration ======
+2021-11-26 13:05:35.270  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : Active profiles: []
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.specification.version
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.cpu.isalist
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.jnu.encoding
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.class.path
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : com.sun.management.jmxremote.authenticate
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.vendor
+2021-11-26 13:05:35.273  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.arch.data.model
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.variant
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vendor.url
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : catalina.useNaming
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.timezone
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.specification.version
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : os.name
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.java.launcher
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.country
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.boot.library.path
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : com.sun.management.jmxremote.ssl
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.application.admin.enabled
+2021-11-26 13:05:35.274  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.java.command
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : com.sun.management.jmxremote
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : jdk.debug
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.liveBeansView.mbeanDomain
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.cpu.endian
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.boot.project.name
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.home
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.language
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.specification.vendor
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.version.date
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.home
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : file.separator
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.compressedOopsMode
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : line.separator
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.specification.vendor
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.specification.name
+2021-11-26 13:05:35.275  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.awt.headless
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.script
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.management.compiler
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.runtime.version
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.name
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.jmx.enabled
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : path.separator
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : os.version
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.runtime.name
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : file.encoding
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.beaninfo.ignore
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.name
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : LOG_FILE
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vendor.url.bug
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.io.tmpdir
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : catalina.home
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : com.zaxxer.hikari.pool_number
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : com.sun.management.jmxremote.port
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.version
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : user.dir
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : os.arch
+2021-11-26 13:05:35.276  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.specification.name
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PID
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.os.patch.level
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : catalina.base
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.library.path
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.info
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vendor
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.vm.version
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.rmi.server.hostname
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.rmi.server.randomIDs
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : sun.io.unicode.encoding
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : java.class.version
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : USERDOMAIN_ROAMINGPROFILE
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PROCESSOR_LEVEL
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : SESSIONNAME
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ALLUSERSPROFILE
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PROCESSOR_ARCHITECTURE
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PSModulePath
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : SystemDrive
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : MAVEN_HOME
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : USERNAME
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ProgramFiles(x86)
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : HELM
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : FPS_BROWSER_USER_PROFILE_STRING
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PATHEXT
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : DriverData
+2021-11-26 13:05:35.277  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : OneDriveConsumer
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ProgramData
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ProgramW6432
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : HOMEPATH
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PROCESSOR_IDENTIFIER
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ProgramFiles
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PUBLIC
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : JAVA_HOME_OPEN_15
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : windir
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : =::
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : JAVA_HOME_OPEN_11
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : QTJAVA
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : LOCALAPPDATA
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ChocolateyLastPathUpdate
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : USERDOMAIN
+2021-11-26 13:05:35.278  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : FPS_BROWSER_APP_PROFILE_STRING
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : LOGONSERVER
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : GRADLE_HOME
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ERLANG_HOME
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : GROOVY_HOME
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : OneDrive
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : APPDATA
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ChocolateyInstall
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : JAVA_HOME_OPEN_8
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : CommonProgramFiles
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : Path
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : OS
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : COMPUTERNAME
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : PROCESSOR_REVISION
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : CLASSPATH
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : CommonProgramW6432
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ComSpec
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : KUBECTL
+2021-11-26 13:05:35.279  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : SystemRoot
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : TEMP
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : HOMEDRIVE
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : USERPROFILE
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : TMP
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : JAVA_HOME_ORACLE
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : CommonProgramFiles(x86)
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : NUMBER_OF_PROCESSORS
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.mvc.view.prefix
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.mvc.view.suffix
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : logging.level.org.springframework.web
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.mvc.log-resolved-exception
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : logging.file
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : management.endpoints.web.base-path
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : management.endpoints.web.exposure.include
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.jpa.show-sql
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.jpa.hibernate.ddl-auto
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.datasource.driver-class-name
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.jpa.properties.hibernate.dialect
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.datasource.url
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.datasource.username
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.datasource.password
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.resources.cache.period
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.groovy.template.cache
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : server.servlet.jsp.init-parameters.development
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.thymeleaf.cache
+2021-11-26 13:05:35.280  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.freemarker.cache
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : server.error.include-stacktrace
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.mustache.cache
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.h2.console.enabled
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : server.servlet.session.persistent
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.template.provider.cache
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.reactor.stacktrace-mode.enabled
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : spring.resources.chain.cache
+2021-11-26 13:05:35.281  INFO 20916 --- [restartedMain] c.i.s.w.EnvironmentConfigurationLogger   : ===========================================
+2021-11-26 13:05:35.337  INFO 20916 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 8080 (http) with context path ''
+2021-11-26 13:05:35.339  INFO 20916 --- [restartedMain] c.i.s.web.SpringBootFirstWebApplication  : Started SpringBootFirstWebApplication in 6.345 seconds (JVM running for 7.527)
+2021-11-26 13:05:51.603  INFO 20916 --- [RMI TCP Connection(1)-127.0.0.1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2021-11-26 13:05:51.603  INFO 20916 --- [RMI TCP Connection(1)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2021-11-26 13:05:51.615  INFO 20916 --- [RMI TCP Connection(1)-127.0.0.1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 12 ms
+2021-11-26 13:06:26.080  INFO 20916 --- [http-nio-8080-exec-8] o.h.h.i.QueryTranslatorFactoryInitiator  : HHH000397: Using ASTQueryTranslatorFactory
+2021-11-26 13:09:30.822  INFO 20916 --- [RMI TCP Connection(3)-127.0.0.1] inMXBeanRegistrar$SpringApplicationAdmin : Application shutdown requested.
+2021-11-26 13:09:30.825  INFO 20916 --- [RMI TCP Connection(3)-127.0.0.1] o.s.s.concurrent.ThreadPoolTaskExecutor  : Shutting down ExecutorService 'applicationTaskExecutor'
+2021-11-26 13:09:30.826  INFO 20916 --- [RMI TCP Connection(3)-127.0.0.1] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2021-11-26 13:09:30.829  INFO 20916 --- [RMI TCP Connection(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2021-11-26 13:09:30.833  INFO 20916 --- [RMI TCP Connection(3)-127.0.0.1] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.

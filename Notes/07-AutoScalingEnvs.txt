@@ -1,0 +1,304 @@
+1) cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\07-hello-world-rest-api
+2)Project:
+	- Class 'InstanceInformationService.java':
+		- As we increase teh no. of instances, we need to know which instanc eteh respons eis coming back from
+		- 'WEBSITE_INSTANCE_ID' is an Azure env variable which is configured on each of the instances
+		- The class will return the instance Guid
+
+
+	- Controller Class 'HelloWorldController.java':
+		- In order to increase load this generates arandom number btw 1 to 1000 and creates a list with that many beans	
+		- it also returns the instance Guid ( this is autowired in the class0
+
+	@GetMapping(path = "/hello-world-bean-list")
+	public List<HelloWorldBean> helloWorldBeanList() {
+		return Collections.nCopies((new Random()).nextInt(1000),
+					new HelloWorldBean("Hello World v1 " + instanceService.retrieveInstanceInfo()));
+	}
+
+3) Open POM and add azure-webapp-maven-plugin :
+		<build>
+		<finalName>hello-world-rest-api</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>1.7.0</version>
+			</plugin>
+		</plugins>
+	</build>
+
+4)Build JAR:
+	-cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\07-hello-world-rest-api
+
+	-Open command prompt:
+		- cmd: mvn clean install
+		- jar will be geenratedin D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\07-hello-world-rest-api\target
+
+5)Configure Azure webapp:
+	-Command prompt:
+		- cmd: mvn azure-webapp:config
+			- Select
+				- Linux
+				- Java 11
+			- Update resounrce group , appnam,pricing tier, region & port in geernated pom as follws:
+          <resourceGroup>hello-world-rest-api-v2-rg</resourceGroup>
+          <appName>hello-world-rest-api-v2-mailsonymathew</appName>
+          <pricingTier>B1</pricingTier>
+          <region>westeurope</region>
+          <appSettings>
+          	<property>
+          		<name>JAVA_OPTS</name>
+          		<value>-Dserver.port=8080</value>
+          	</property>
+          </appSettings>
+
+	-************ Note: If you are using the Pom directly it will contain configuration for deplyment slot under  'azure-webapp-maven-plugin' whcih we need to comment out for teh time being.
+					<deploymentSlot>
+						<name>stage</name>
+						<configurationSource>parent</configurationSource>					
+					</deploymentSlot>
+
+6) Deploy Azure webapp:
+	- Command prompt:
+		- cmd:mvn azure-webapp:deploy
+
+	- Go to webapp: Azure-> Resounrce Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- url: <Azure_url>/hello-world-bean-list
+			= https://hello-world-rest-api-v2-mailsonymathew.azurewebsites.net//hello-world-bean-list
+		- Response wil lcontain a randomly geenrated list with @Hello world + instance id@
+	
+
+
+7) Manual Scaling and ARR affinity:
+	- Manually increase the no. of isntaces:
+		- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- Search for scale:
+			- Two options:
+			 	- Scale Up 
+				- Scale Out
+			- Select Scale Out:
+				- Since we are usig basic B1 plan, we can only do manual scaling 
+				- Increase instance count to 2 -> Save
+				- Wait for a coupel of minutes 
+				- Open Azure cloud shell:
+					- cmd:watch  curl  <Azure_url>/hello-world-bean-list
+						- watch curl https://hello-world-rest-api-v2-mailsonymathew.azurewebsites.net//hello-world-bean-list	
+						- will run thE cmd every two secs
+					- Two instance ids shoudl be returnded
+					- However if we referesh the browser , the same instanc e id is returned.
+						- This	 is because of ARR affinity:
+							- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew->configuration->Geenral Settings: 
+					- Always on:
+						- If set to off -> if no requests are recieved for some time in teh application, Azure will kill teh application 
+					- ARR( Application Request Routing) Affinity: 
+					- Azure configures a router to balance load between the instance 
+					- If on-> if a request comes from a specific browser or request, all subsequent requests will b sen dto sam einstances. Very useful in case of web applications which are stateful  but not needed for REST APIs.
+					- Set to off -> Save -> restart application :
+						-  cmd: az webapp restart --name hello-world-rest-api-v2-mailsonymathew --resource-group  hello-world-rest-api-v2-rg		
+						- OR restart from Azure UI	
+					- Even if application is restarting, the application continues to be avialable as can be seen from  the curl in Azure cloud shell
+					- Refresh browser to see different instance ids.
+
+
+8)Auto Scaling:
+	- 	- Automatically increase the no. of isntaces:
+		- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- Search for scale:
+			- Two options:
+			 	- Scale Up 
+				- Scale Out
+			- Select Scale Out:
+				- Decrease no.of instances to 1.
+				- Very soon the curl cmd can be seen to return responses from one instance
+					-cmd: watch curl https://hello-world-rest-api-v2-mailsonymathew.azurewebsites.net//hello-world-bean-list	
+				- Our current plan 'B1' does not support auto scaling:
+					- Select Scale Up:
+						- Increases amount of infrastructure available per instance of our application 
+						- Production -> P1V2 > Apply
+								- Open Azure cloud shell:
+					- cmd:watch  -n 01. curl  <Azure_url>/hello-world-bean-list
+						- cmd:watch -n 0.1 curl https://hello-world-rest-api-v2-mailsonymathew.azurewebsites.net//hello-world-bean-list		
+						- will run thE cmd every .01 second
+						- response will coem back from a new isntance
+						- Let this run for 5 mins to increas eload 
+					
+					- Scale Out -> Custom Autoscale-> Default -> Auto Created scale condition:
+						- Scale mode: Scale based on a metric 
+							- Rules->Click on 'Add a rule' link:
+								-Time aggregation= Average
+								-Metric name= CPU Percentage
+								- Dimension Name= Instance 
+								- Operator:=
+								- Dimension values= All values
+								- Operator= Greater than 
+								- Threshhold = 1 ( any value less than current CPU utilzation. Remeber for prod it will alwayds be more tan 70 %. Thsi value is only for demo purposes)
+								- Duration in minutes= 1
+								_ Time grain minutes=1
+								- Time grain statisitc= Average
+								-Action:
+									- Operation: Increase count by 
+									- Instance count = 1
+									- Cool Down ( minutes) = 1
+										-	time period for which scheduler will wait before another auto scaling operation is performed.
+						- Add 
+									
+						- Instance limits:	
+							- Minimum= 1
+							- Maximum = 5
+							- Default = 1		
+						- Save -> If you get this Error-> Missing Subscription Registration -> 
+							- The subscription must be registered to use namespace 'microsoft insights'
+								-Subscriptions-> Resounrce providers-> microsoft.insights -> Register
+
+						- Try saving again
+						- Open Azure cloud shell:
+					- cmd:watch  -n 01. curl  <Azure_url>/hello-world-bean-list
+					- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew->  scale out -> configure-> run history-> wait for a coupel of minutes 
+				- You can see an operation 'scale out' being performed
+		- Configure Scale in:
+		- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- Search for scale:
+			- Two options:
+			 	- Scale Up 
+				- Scale Out
+			- Select Scale Out:
+				- Configure-> Rules-> Scale Out-> Either add a new rule or change exsiting rule
+					- Change existign rule-> Click on Average CPU percentage > 1
+						- Time grain statistic= average
+						- Operator = Less than 
+						- Threshhold = 20
+						- Operation: Decrease count by
+						- Instance count = 1
+						- Cool Down(minutes) = 1 -> Update->Save
+				- Open Azure cloud shell:
+					- cmd:watch  -n 2 curl  <Azure_url>/hello-world-bean-list	
+						- will run the cmd every 2 seconds
+					- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew->  scale out -> configure-> run history-> wait for a couple of minutes 
+				- You can see an operation 'scale in' being performed
+
+
+9)Deployment Slot for Staging env:
+	- Environments are called slots
+	- Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- Search for Deployment Slots:
+			- Deploy another version of thsi application as staging application:
+				- HelloWorldController.java:
+	@GetMapping(path = "/hello-world-bean-list")
+	public List<HelloWorldBean> helloWorldBeanList() {
+		return Collections.nCopies((new Random()).nextInt(1000),
+				    //new HelloWorldBean("Hello World v2 " + instanceService.retrieveInstanceInfo()));
+					new HelloWorldBean("Hello World v2 " + instanceService.retrieveInstanceInfo()));
+	}
+
+				- POM.xml:
+					- Configure deployment slot in azure-webapp-maven-plugin:
+						- 			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>1.7.0</version>
+				<configuration>
+					<schemaVersion>V2</schemaVersion>
+					<resourceGroup>hello-world-rest-api-v2-rg</resourceGroup>
+					<appName>hello-world-rest-api-v2-mailsonymathew</appName>
+					<pricingTier>P1V2</pricingTier>
+					<region>westeurope</region>
+					<appSettings>
+						<property>
+							<name>JAVA_OPTS</name>
+							<value>-Dserver.port=8080</value>
+						</property>
+					</appSettings>
+					<runtime>
+						<os>linux</os>
+						<javaVersion>java11</javaVersion>
+						<webContainer>java11</webContainer>
+					</runtime>
+					<deploymentSlot>
+						<name>stage</name>
+						<configurationSource>parent</configurationSource>					
+					</deploymentSlot>
+
+					
+
+
+				- cd cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\07-hello-world-rest-api
+				- Build package:
+					- cmd: mvn clean install -DskipTests
+						- if we want we can include tests
+				-Deploy application to Azure:
+					- cmd: mvn azure-webapp:deploy
+
+					- Will try create a new slot called 'Stage' and will deploy to 'Stage'.
+						- Will fail if we suse basic 'B1' as pricing tier in POM.xml ,because slots are not supported in basic pricing tier of B1.
+						- in POM change comment out pricing tier as the pricing tier will be automatically taken from prod or you can specify 'P1V2' :
+						<!-- <pricingTier>B1</pricingTier> -->
+							OR
+						     <pricingTier>P1V2</pricingTier>
+
+					- cmd: mvn azure-webapp:deploy
+						- copy url from console :Azure staging url/hello-world-bean-list
+						OR  
+						- Search for Deployment Slots:
+							- Two deployment slots will be avialable:
+								(1) hello-world-rest-api-v2-mailsonymathew production 
+								(2) hello-world-rest-api-v2-mailsonymathew-stage-> 
+									- Azure staging url/hello-world-bean-list
+									-https://hello-world-rest-api-v2-mailsonymathew-stage.azurewebsites.net/hello-world-bean-list
+
+10) Swap Stage and Productioon envs : Blue Green Deployment
+	- - Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- Search for Deployment Slots:
+			- Two deployment slots will be avialable:
+				(1) hello-world-rest-api-v2-mailsonymathew production 
+				(2) hello-world-rest-api-v2-mailsonymathew-stage
+			- Select stage deployment :
+				- We want to deploy staging slot application version while preserving production url fro DBS etc.Thsi can be doen using Application Settings:
+					- Create an Application Settign which we do not want to copy to prod:
+						- Configuraiton-> Application Settings -> New Application Setting-:
+							: Name=DATABASE_URL( dummy name)
+							: Value=STAGEURL ( dummy url for demo purpose) 
+							- Enable 'Deployment Slot Setting'-> Thsi means we wnrtt hsi settign only in thsi slot. i.e. we do not want this setting to be copied over to prod	
+					- - Create an Application Settign which we want to copy to prod:
+							: Name=NEW_SETTING(dummy name)
+							: Value=PRODURL ( dummy url for demo purpose) 
+							- Disable 'Deployment Slot Setting'-> Thsi means we want this setting to be copied over to prod	
+					-Save
+			- Production slot:
+				- ** We cannot seelct prod deployment slot. Instead 	:
+						- Configuraiton-> Application Settings -> New Application Setting-:
+							: Name=DATABASE_URL( dummy name)
+							: Value=PROD_URL ( dummy url for demo purpose) 
+							- Enable 'Deployment Slot Setting'-> Thsi means we want this settign tp be preserved in this slot.
+
+
+			- Swap app in prod with stage:
+				-			- Go back to deployment slots-> Swap  ( icon on top right hand) :
+								- Source -> select stage api =hello-world-rest-api-v2-mailsonymathew-stage 
+								- Target -> select prod api = hello-world-rest-api-v2-mailsonymathew
+								- Optional:Select 'Perform swap with preview'-> will swap in two different phases:
+Swap with preview breaks down a normal swap into two phases. In phase one, any slot-specific application settings and connections strings on the destination will be temporarily copied to the source slot. This allows you to test the slot with its final configuration values. From here, you may choose to either cancel phase one to revert to your normal configuration, or proceed to phase two, which would remove the temporary config changes and complete swapping the source to destination slot.
+
+								- Swap
+								-  Open Azure cloud shell:
+									- cmd:watch  -n 01. curl  <Azure_url>/hello-world-bean-list
+								- You can observe that application does not go down and will slowly switch over to new application version v2 from v1
+
+								
+
+
+11) Canary Deployments:
+	- Means having two versions live in production 
+	- 	- - Azure-> Resource Group -> hello-world-rest-api-v2-rg -> hello-world-rest-api-v2-mailsonymathew
+		- Search for Deployment Slots:
+			- Two deployment slots will be avialable:
+				(1) hello-world-rest-api-v2-mailsonymathew production 
+				(2) hello-world-rest-api-v2-mailsonymathew-stage
+			- Configure traffic percentage for each slot( E.g. 90% to prod and 10% to stage).
+				- ** Remember- You can only adjust stage percentage and prod percentage will change accordingly
+				- Test changes an dincrease traffic accordingly till all traffic ( 100%) is going to stage and 0% to prod -> swap
+		- Note: For canary deployment. the teh prod DB should be used both in Prod and Stage.

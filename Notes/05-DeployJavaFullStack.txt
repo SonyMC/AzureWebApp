@@ -1,0 +1,161 @@
+REACT-> RESTFUl API-> DB
+-------------------------
+Containts two components :
+
+	(a) REST backend - Use eclipse
+	(b) REACT frontend - Use Visual Studion Code to edit ( will also require installign npm)
+
+REST backend
+--------------
+Directory is :D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\restful-web-services
+
+1)JWT is used to secure the REST API
+
+2) url:http://localhost:5000/jpa/users/in28minutes/todos
+	- will show Unauthorised error: There was an unexpected error (type=Unauthorized, status=401).
+You would need to provide the Jwt Token to Access This resource
+	- we wil lneed JWT token
+	- Instal RESTLET chrome plugin: TALEND API
+	- POST:
+		- Refer 'readme.md' in D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\restful-web-services
+		-http://localhost:5000/authenticate 
+		-Request:
+{
+  "username":"in28minutes",
+  "password":"dummy"
+}
+
+		- token:{
+"token": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpbjI4bWludXRlcyIsImV4cCI6MTYzODg1NjU1OCwiaWF0IjoxNjM4MjUxNzU4fQ.OcTbSiMVYVhrmmQI6Qj3GkR0qzKcDqf5nIVpRY6uZeZDSWUfZyd7pn49U5GYOThSh9pTe9nLm25CQJ4V-kpypw"
+}
+
+	- GET using the token:
+		- http://localhost:5000/jpa/users/in28minutes/todos
+		- Hader-> Authorization:Bearer <token>
+			->E.g. Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJpbjI4bWludXRlcyIsImV4cCI6MTYzODg1NjU1OCwiaWF0IjoxNjM4MjUxNzU4fQ.OcTbSiMVYVhrmmQI6Qj3GkR0qzKcDqf5nIVpRY6uZeZDSWUfZyd7pn49U5GYOThSh9pTe9nLm25CQJ4V-kpypw
+
+
+REACT Frontend
+--------------
+
+3) Front end:
+	- Visual Studio Code:
+	- Open folder 'D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\frontend'.
+	- Instal npm:
+		 Open cmd prompt in 'D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\fronend': 
+			- cmd: npm version
+			- cmd: npm install
+				- will download all dependencies
+			-cmd:npm start 
+				- wil lstatrt the app on port 4200
+					- Note: For windows, update package.json with "scripts": {
+    "start": "SET PORT=4200 && react-scripts start",
+
+			        -url:localhost:4200
+					- username:in28minutes
+					- passowrd:dummy
+					- login will fail:
+						-Invalid cedentials 
+						- Right click on browser page-> inspect -> tab network-> login again-> you can see th ereques backend url is pointing to http://localhost:8080/authenticate instead of http://localhost:5000/authenticate
+						- Go to source-> Constants.js-> export const API_URL = 'http://localhost:5000'
+			
+
+
+
+Deploy REST Backend to Azure
+---------------------------------
+- D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\restful-web-services
+
+- Open POM and add azure-webapp-maven-plugin :
+		<build>
+		<finalName>rest-api-full-stack</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+			<plugin>
+				<groupId>com.microsoft.azure</groupId>
+				<artifactId>azure-webapp-maven-plugin</artifactId>
+				<version>1.7.0</version>
+			</plugin>
+		</plugins>
+	</build>
+
+- Build JAR:
+	-cd into D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\restful-web-services
+
+	-Open command prompt:
+		- cmd: mvn clean install
+
+- Configure Azure webapp:
+	-Command prompt:
+		- cmd: mvn azure-webapp:config
+			- Select
+				- Linux
+				- Java 11
+			- Update resounrce group , appnam,pricing tier, region & port in geernated pom as follws:
+          <resourceGroup>rest-api-full-stack-rg</resourceGroup>
+          <appName>rest-api-full-stack-mailsonymathew</appName>
+          <pricingTier>B1</pricingTier>
+          <region>westeurope</region>
+          <appSettings>
+          	<property>
+          		<name>JAVA_OPTS</name>
+          		<value>-Dserver.port=5000</value>
+          	</property>
+          </appSettings>
+
+- Deploy Azure webapp:
+	- Command prompt:
+		- cmd:mvn azure-webapp:deploy
+
+	- Go to webapp: Azure-> Resounrce Group -> rest-api-full-stack-rg -> rest-api-full-stack-mailsonymathew
+		- Copy url:https://rest-api-full-stack-mailsonymathew.azurewebsites.net
+		- Copy service plan first part : 
+			- i.e  if full plan is 'ServicePlanece39cea-0e2d-44af (B1: 1)'. copy only ''ServicePlanece39cea-0e2d-44af'
+
+- Connect to backend Azure webapp using local fronent :
+	- Open Visual Studio Code
+	- Open folder 'D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\fronend'.
+	- src-> Constants.js->
+/* For Best Practices https://facebook.github.io/create-react-app/docs/adding-custom-environment-variables*/
+//export const API_URL = 'http://localhost:5000'
+export const API_URL = 'https://rest-api-full-stack-mailsonymathew.azurewebsites.net'
+export const JPA_API_URL = `${API_URL}/jpa`
+
+	- cmd: npm start
+	- url:localhost:4200
+		- username:in28minutes
+		- passowrd:dummy
+
+Deploy the static html Frontend to Azure
+-----------------------------------------
+- - Open folder 'D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\frontend'.
+- Production build:
+	- cmd: npm run build
+		- Will generate build folder which will contain mimimal set of files which we can direclty copy inot any webserver
+	- Go to build directoyr:
+		- cmd: cd D:\OneDrive\Study\DevOps\DeploySpringBootToAzure\04-spring-boot-react-full-stack-h2\frontend\todo-app\build
+	- Use command line cmd to take entire contatns of build, create an app and deploy content to application
+		- cmd:az webapp up --name frontend-full-stack-mailsonymathew --html --plan ServicePlanece39cea-0e2d-44af --resource-group  rest-api-full-stack-rg-frontend  --location westeurope 
+		 - Note: we cannot use same resounrce group as the backend rest api as that OS was n Limux and her eit is Windows. Hence we have to specify a new resource group.  		
+	- You will get teh following:
+You can launch the app at http://frontend-full-stack-mailsonymathew.azurewebsites.net
+{
+  "URL": "http://frontend-full-stack-mailsonymathew.azurewebsites.net",
+  "appserviceplan": "ServicePlanece39cea-0e2d-44af",
+  "location": "westeurope",
+  "name": "frontend-full-stack-mailsonymathew",
+  "os": "Windows",
+  "resourcegroup": "rest-api-full-stack-rg-frontend",
+  "runtime_version": "-",
+  "runtime_version_detected": "-",
+  "sku": "FREE",
+  "src_path": "D:\\OneDrive\\Study\\DevOps\\DeploySpringBootToAzure\\04-spring-boot-react-full-stack-h2\\frontend\\todo-app\\build"
+}
+
+	- Launch application using above url generated: http://frontend-full-stack-mailsonymathew.azurewebsites.net	
+
+
+			
