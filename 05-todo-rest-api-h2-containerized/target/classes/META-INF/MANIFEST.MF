@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Built-By: mails
+Build-Jdk: 15.0.2
+Implementation-Title: 05-todo-rest-api-h2-containerized
+Implementation-Version: 1.0.1.RELEASE
+Implementation-Vendor-Id: com.in28minutes.rest.webservices
+Implementation-URL: https://projects.spring.io/spring-boot/#/spring-boot
+ -starter-parent/todo-rest-api-h2
+Created-By: Maven Integration for Eclipse
+
